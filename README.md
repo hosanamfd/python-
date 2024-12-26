@@ -20,7 +20,6 @@ Embora tenha preferência por essas áreas, estou aberta a qualquer oportunidade
 Cada exercício possui:
 - Acima do código, estarão comentadas as orientações para resolver o desafio (geralmente em inglês) que recebi.
 - O código em Python que escrevi para resolver o desafio.
-- Após o código, estará comentado o link do desafio no Codewars.
 
 Importante: O nome do exercício no arquivo é o mesmo que aparece no Codewars. Isso facilita a busca do exercício diretamente no site da plataforma.
 
