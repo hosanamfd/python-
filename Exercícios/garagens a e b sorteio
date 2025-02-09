@@ -1,0 +1,113 @@
+import tkinter as tk
+import random
+from datetime import datetime
+import time
+
+
+def sortear_vagas(apartamentos_A, apartamentos_B, vagas_A, vagas_B, seed):
+    random.seed(seed)
+    random.shuffle(apartamentos_A)
+    random.shuffle(apartamentos_B)
+    random.shuffle(vagas_A)
+    random.shuffle(vagas_B)
+
+    resultado_A = dict(zip(apartamentos_A, vagas_A))
+    resultado_B = dict(zip(apartamentos_B, vagas_B))
+
+    return resultado_A, resultado_B
+
+
+def iniciar_sorteio():
+    apartamentos_A = [
+        "02A", "03A", "04A", "11A", "12A", "14A", "15A", "21A", "22A", "23A", "24A",
+        "31A", "32A", "33A", "34A", "41A", "42A", "43A", "44A", "51A", "52A", "53A", "54A",
+        "63A", "64A"
+    ]
+
+    apartamentos_B = ["02B", "03B", "04B", "11B", "12B", "14B", "15B", "21B", "22B", "23B", "24B", "31B", "32B", "33B",
+                      "34B", "41B", "42B", "43B", "44B", "51B", "52B", "53B", "54B", "63B", "64B"]
+
+    todas_garagens_A = [
+        39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 12, 15, 14, 16, 17, 18, 19, 20, 21, 22, 24, 25
+    ]
+
+    todas_garagens_B = ['30', '31', '32', '33', '34', '35', '36', '37', '52', '53', '01', '02', '03', '04', '05', '06',
+                        '07', '08', '09', '10', '23', '26', '27', '11', '38']
+
+    garagens_boas_A = [
+        39, 40, 41, 42, 46, 47, 48, 51, 12, 15, 14, 16, 19, 20, 21, 22, 25
+    ]
+
+    garagens_boas_B = ['34', '35', '36', '37', '52', '53', '06', '08', '09', '10', '26', '11', '38']
+
+    aptos_para_garagens_boas_A = [
+        "03A", "04A", "14A", "15A", "21A", "22A", "31A", "32A", "34A", "41A", "42A", "43A", "44A", "51A", "52A", "63A",
+        "64A"
+    ]
+
+    aptos_para_garagens_boas_B = ["02B", "14B", "32B", "33B", "34B", "41B", "42B", "44B", "51B", "53B", "54B", "63B",
+                                  "64B"]
+
+    apartamentos_restantes_A = [ap for ap in apartamentos_A if ap not in aptos_para_garagens_boas_A]
+    apartamentos_restantes_B = [ap for ap in apartamentos_B if ap not in aptos_para_garagens_boas_B]
+
+    garagens_restantes_A = [vaga for vaga in todas_garagens_A if vaga not in garagens_boas_A]
+    garagens_restantes_B = [vaga for vaga in todas_garagens_B if vaga not in garagens_boas_B]
+
+    min_len_A = min(len(apartamentos_restantes_A), len(garagens_restantes_A))
+    min_len_B = min(len(apartamentos_restantes_B), len(garagens_restantes_B))
+
+    apartamentos_restantes_A = apartamentos_restantes_A[:min_len_A]
+    garagens_restantes_A = garagens_restantes_A[:min_len_A]
+
+    apartamentos_restantes_B = apartamentos_restantes_B[:min_len_B]
+    garagens_restantes_B = garagens_restantes_B[:min_len_B]
+
+    seed = 568
+    sorteio_A, sorteio_B = sortear_vagas(apartamentos_A, apartamentos_B, garagens_boas_A + garagens_restantes_A,
+                                         garagens_boas_B + garagens_restantes_B, seed)
+
+    # Simulação de delay
+    resultado_label.config(text="Sorteando...")
+    root.update()
+    time.sleep(1)  # Delay
+
+    resultado_final_A = "\n".join(
+        [f"O apartamento {apto} ficou com a vaga {vaga}" for apto, vaga in sorted(sorteio_A.items())])
+    resultado_final_B = "\n".join(
+        [f"O apartamento {apto} ficou com a vaga {vaga}" for apto, vaga in sorted(sorteio_B.items())])
+
+    # Limpar a mensagem de "Sorteando..."
+    resultado_label.config(text="")
+
+    # Exibir os resultados
+    resultado_A_label.config(text=resultado_final_A)
+    resultado_B_label.config(text=resultado_final_B)
+
+
+root = tk.Tk()
+root.title("Sorteio de Vagas")
+root.geometry("800x600")
+
+titulo_label = tk.Label(root, text="Sorteio de Vagas de Apartamentos", font=("Arial", 16))
+titulo_label.pack(pady=20)
+
+sortear_button = tk.Button(root, text="Sortear", font=("Arial", 14), command=iniciar_sorteio)
+sortear_button.pack(pady=20)
+
+# Frame para separar os resultados A e B
+resultados_frame = tk.Frame(root)
+resultados_frame.pack(fill=tk.BOTH, padx=20, pady=20)
+
+# Labels para mostrar os resultados separados
+resultado_A_label = tk.Label(resultados_frame, text="", font=("Arial", 12), justify="left", padx=20, pady=20)
+resultado_A_label.pack(side=tk.LEFT, expand=True)
+
+resultado_B_label = tk.Label(resultados_frame, text="", font=("Arial", 12), justify="left", padx=20, pady=20)
+resultado_B_label.pack(side=tk.LEFT, expand=True)
+
+# Label para indicar que o sorteio foi realizado
+resultado_label = tk.Label(root, text="", font=("Arial", 14), padx=10, pady=10)
+resultado_label.pack(pady=20)
+
+root.mainloop()
